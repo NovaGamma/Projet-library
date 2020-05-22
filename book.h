@@ -9,10 +9,17 @@ int nAvailableCopies;
 
 }Book;
 
-void addBook(Book*);
+typedef struct {
+Book* list;
+int nBooks;
+//ptr loaners*; //will contain members who have borrowed a copy of this book
+}Library;
+
+void getBook(Book*);
+void addBook(Library*);
 void displayBook(Book*);
-Book* readBooks(Book *listOfBook);
-void readBook(Book* book,int index);
-void displayBooks(Book *listOfBook,int nBooks);
-void saveBook(Book* book);
-void saveBooks(Book *listOfBook,int nBooks);
+void readBooks(Library*);
+void readBook(Book*,int);
+void displayBooks(Library*);
+void saveBook(Book*);
+void saveBooks(Library*);

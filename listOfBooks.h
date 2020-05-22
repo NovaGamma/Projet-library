@@ -1,6 +1,8 @@
+#include "book.h"
+
 typedef struct {
-Book list[];
+Book* list[];
 int nBooks=0;
 //ptr loaners*; //will contain members who have borrowed a copy of this book
 
-}Book;
+}Library;
