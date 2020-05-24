@@ -1,0 +1,128 @@
+Algorithm Library_Management
+
+VAR : library: Library, community: Community, mode: integer, on: integer
+
+BEGIN
+
+  on <- 1
+  write("Initializing...")
+  init(library,community)
+  write("Loading Complete")
+  displayBook(library.list[1])
+  mode <- getMode()
+  while(on = 1) Do
+    if(mode = 1) then
+      readOnlyAccessServiceMenu(library,community)
+    else if(mode = 2) then
+      interfacesWithTheLibrarianMenu(library,community)
+    End if
+  End while
+  write("Quiting")
+  saveAll(library,community)
+END
+
+
+Function init(library: Library, community: Community):
+
+Copied parameters: library, community
+Changed parameter: Ø
+Local variable: Ø
+
+BEGIN
+  readBooks(library)
+  readMembers(community)
+END
+
+
+Function saveAll(library: Library, community: Community):
+
+Copied parameters: library, community
+Changed parameter: Ø
+Local variable: Ø
+
+BEGIN
+  saveBooks(library)
+  saveMembers(community)
+END
+
+
+Function getMode(): integer
+
+Copied parameters: Ø
+Changed parameter: Ø
+Local variable: choice: character, 
+
+BEGIN
+  write("\nMake your choice between: ")
+  write("Member mode: a")
+  write("Librarian mode: b")
+  getLetter(choice, "Your choice: ",2)
+  if(choice = 'a') then
+    return 1
+  else if(choice = 'b') then
+    return 2
+  End if
+END
+
+
+<----------Structures---------->
+//About books:
+
+Structure Book
+begin
+  title[100]: array of characters
+  author[50]: array of characters
+  code[7]: array of characters
+  nCopies: integer
+  theme[3]: array of characters
+  nAvailableCopies: integer
+end
+
+
+Structure Library
+begin
+  list[100000000]: array of Book
+  nBooks: integer
+end
+
+
+//About members:
+
+Structure Date
+begin
+  day: integer
+  month: integer
+  year: integer
+end
+
+Structure Borrow
+begin
+  borrow_date: Date
+  return_date: Date
+  member: Member
+  book: Book
+end
+
+Structure ListOfLoans
+begin
+  list[100000000]: array of Borrow
+  nBorrowed: integer
+end
+
+Structure Member
+begin
+  fName[100]: array of characters
+  lName[100]: array of characters
+  mAddress[100]: array of characters
+  eMail[100]: array of characters
+  function[100]: array of characters
+  listborrowed[3] array of Borrow
+  loan: integer
+  sanction: integer
+end
+
+Structure Community
+begin
+  list[100000000]: array of Member
+  nMembers: integer
+end

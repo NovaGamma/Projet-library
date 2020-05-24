@@ -1,3 +1,4 @@
-2
-a random name/a random author /@/12/12
-another random name/a known author/@/1/0
+3
+a random name/a random author /CAR-001/12/CAR/12
+another random name/a known author/CAR-002/1/CAR/1
+another test book /another test author /SFX-001/2/SFX/2

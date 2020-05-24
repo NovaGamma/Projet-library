@@ -6,18 +6,21 @@ typedef struct{
   char letter;
 }Test;
 
-void call(Test* given);
+void call(char);
 
-void call(Test* given){
-  printf("%d",(*given).number);
-  (*given).number=3;
+void call(char test){
+  printf("%s",test);
 
 }
 
 int main(){
   Test test;
-  test.number=2;
-  call(&test);
-  printf("%d",test.number);
-  return 0;
+  Test test2;
+  test.number=1;
+  test2.number=2;
+  Test temp;
+  temp=test;
+  test=test2;
+  test2=temp;
+  printf("%d\n",test.number);
 }
