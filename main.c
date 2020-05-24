@@ -3,11 +3,14 @@
 #include <string.h>
 #include "menus.c"
 #include "members.c"
+#include "loans.c"
 #include "books.c"
 
-void init(Library* library,Community* community){
+void init(Library* library,Community* community,ListOfLoans activeLoans,ListOfLoans totalLoans){
   readBooks(library);
   readMembers(community);
+  readActiveLoans(activeLoans);
+  readTotalLoans(totalLoans);
 }
 
 void saveAll(Library* library,Community* community){
@@ -40,11 +43,14 @@ int main(){
   printf("%s\n",library.list[0].theme);
   mode=getMode();
   while(on==1){
-    if(mode==1) readOnlyAccessServiceMenu(&library,&community);
-    else if(mode==2) interfacesWithTheLibrarianMenu(&library,&community);
+    if(mode==1) on=readOnlyAccessServiceMenu(&library,&community,&activeLoans,&totalLoans);
+    else if(mode==2) on=interfacesWithTheLibrarianMenu(&library,&community,&activeLoans,&totalLoans);
+    if
   }
   free(library.list);
   free(community.list);
+  free(activeLoans.list);
+  free(totalLoans.list);
   printf("Quiting");
   saveAll(&library,&community);
   free(library.list);

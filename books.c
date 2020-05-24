@@ -53,14 +53,14 @@ void displayBook(Book* book){
 
 void saveBook(Book* book){
   FILE *books;
-  books=fopen("C:\\Users\\NovaGamma\\github\\Projet-library\\db-Book.txt","a");
+  books=fopen("db-Book.txt","a");
   fprintf(books,"%s/%s/%s/%s/%d/%d\n",book->title,book->author,book->code,book->nAvailableCopies,book->theme,book->nCopies);
   fclose(books);
 }
 
 void saveBooks(Library* library){
   FILE *books;
-  books=fopen("C:\\Users\\NovaGamma\\github\\Projet-library\\db-Book.txt","w");
+  books=fopen("db-Book.txt","w");
   fprintf(books,"%d\n",(*library).nBooks);
   fclose(books);
   for(int i=0;i<(*library).nBooks;i++)
@@ -71,7 +71,7 @@ void saveBooks(Library* library){
 void readBook(Book* book,int index){
   FILE *books;
   char test[100];
-  books=fopen("C:\\Users\\NovaGamma\\github\\Projet-library\\db-Book.txt","r");
+  books=fopen("db-Book.txt","r");
   for(int i=0;i<=index;i++)
     fgets(test,100,books);
   fscanf(books,"%[^/]/%[^/]/%[^/]/%d/%[^/]/%d\n",&book->title,&book->author,&book->code,&book->nAvailableCopies,&book->theme,&book->nCopies);
@@ -81,7 +81,7 @@ void readBook(Book* book,int index){
 void readBooks(Library* library){
   FILE *books;
   char test[100];
-  books=fopen("C:\\Users\\NovaGamma\\github\\Projet-library\\db-Book.txt","r");
+  books=fopen("db-Book.txt","r");
   fscanf(books,"%d\n",&(*library).nBooks);
   fclose(books);
   (*library).list=(Book*)malloc((*library).nBooks*sizeof(Book));

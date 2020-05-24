@@ -6,7 +6,7 @@
 #include "book.h"
 
 
-void readOnlyAccessServiceMenu(Library* library, Community* community){
+void readOnlyAccessServiceMenu(Library* library, Community* community,ListOfLoans* activeLoans,ListOfLoans* totalLoans){
   char choice;
   printf("\nMake your choice between:\n");
   printf("To view the list of members: press a\n");
@@ -31,7 +31,7 @@ void readOnlyAccessServiceMenu(Library* library, Community* community){
       break;
 
     case 'd':
-      //listOfBorrowedBooks();
+      //listOfBorrowedBooks(activeLoans,totalLoans);
       break;
 
     default:
@@ -118,15 +118,15 @@ void interfacesWithTheLibrarianMenu(Library* library,Community* community){
       break;
 
     case 'c':
-      //deletDB();
+      //delete(library,community);
       break;
 
     case 'd':
-      //addLoan();
+      //addLoan(activeLoans,totalLoans);
       break;
 
     case 'e':
-      //restitutionBook();
+      //finishLoan(activeLoans,totalLoans);
       break;
 
     default:

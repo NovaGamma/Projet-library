@@ -13,10 +13,9 @@ typedef struct
 typedef struct
 {
   Date borrow_date;
-  Date return_date;
   char memberfName[100];
   char memberlName[100];
-  Book book;
+  char bookCode[7];
 }Borrow;
 
 typedef struct
@@ -33,29 +32,36 @@ typedef struct
 
 typedef struct
 {
-  Member* list;
-  int nMembers;
-}Community;
-
-typedef struct
-{
   Borrow* list;
   int nBorrowed;
 }ListOfLoans;
 
+typedef struct
+{
+  Member* list;
+  int nMembers;
+}Community;
 
-
+void getDate(Date*);
 
 void verifMember(Community*);
 void addMember(Community*);
 void getMember(Member*);
-void addLoan(Member*, ListOfLoans*);
-void finishLoan(Library*, Member*, ListOfLoans*);
 void displayMember(Member*);
 void saveMember(Member*);
 void saveMembers(Community*);
 void readMember(Member*,int);
 void readMembers(Community*);
 void displayMembers(Community*);
+
+void addLoan(Library*,Community*, ListOfLoans*,ListOfLoans*);
+void addBorrow(ListOfLoans*,Date,Member*,Book*);
+void finishLoan(Library*,Community*, ListOfLoans*,ListOfLoans*);
+void saveLoans(ListOfLoans*,ListOfLoans*);
+void saveActiveLoan(Borrow*);
+void saveTotalLoan(Borrow*);
+void readLoans(ListOfLoans*,ListOfLoans*);
+void readActiveLoan(Borrow*,int);
+void readTotalLoan(Borrow*,int);
 
 #endif
