@@ -8,15 +8,12 @@ void getDate(Date* date){
   int day;
   int month;
   int year;
-  do{
   printf("Please give the date (day/month/year) :\n");
-  scanf("%d/%d/%d\n");
-}while(day<1 || day>31 || month<1 || month>12);
-(*date).day=day;
-(*date).month=month;
-(*date).year=year;
+  scanf("%d/%d/%d",&day,&month,&year);
+  (*date).day=day;
+  (*date).month=month;
+  (*date).year=year;
 }
-
 
 void addMember(Community* community)
 {
@@ -37,7 +34,7 @@ void addMember(Community* community)
   lastName[i]=' ';
   for(i=0; i<(*community).nMembers;i++)
   {
-    if ((firstName == (*community).list[i].fName) && (lastName == (*community).list[i].lName))
+    if(strcmp((*community).list[i].fName,firstName)==0 && strcmp((*community).list[i].lName,lastName)==0)
     {
       alreadyExists = 1;
     }
@@ -45,15 +42,30 @@ void addMember(Community* community)
   if(alreadyExists == 1)
   {
     printf("%s %s already exists as a member in the library", firstName, lastName);
+    return;
   }
   else
   {
     (*community).nMembers++;
-    realloc((*community).list,((*community).nMembers)*sizeof(Member));
+    (*community).list=realloc((*community).list,((*community).nMembers)*sizeof(Member));
     strcpy((*community).list[((*community).nMembers-1)].fName,firstName);
     strcpy((*community).list[((*community).nMembers-1)].lName,lastName);
     getMember(&((*community).list[(*community).nMembers-1]));
-    //sortListOfMembers(community);
+    Date date;
+    date.day=0;
+    date.month=0;
+    date.year=0;
+    char fNameTemp[100]="None";
+    char lNameTemp[100]="None";
+    char tempCode[7]="AAA-000";
+    for(int k=0;k<3;k++){
+    (*community).list[(*community).nMembers-1].listborrowed[k].borrow_date=date;
+    strcpy((*community).list[(*community).nMembers-1].listborrowed[k].memberfName,fNameTemp);
+    strcpy((*community).list[(*community).nMembers-1].listborrowed[k].memberlName,lNameTemp);
+    strcpy((*community).list[(*community).nMembers-1].listborrowed[k].bookCode,tempCode);
+    }
+    sortListOfMembers(community);
+
   }
 }
 
@@ -105,8 +117,8 @@ void displayMember(Member* member)
 void saveMember(Member* member)
 {
   FILE *members;
-  members=fopen("members2.txt","a");
-  fprintf(members,"%s/%s/%s/%s/%s/%s/%d/%d/%d/%s/%d/%d/%d/%s/%d/%d/%d\n",member->fName,member->lName,member->mAddress,member->eMail,member->function,member-> listborrowed[0].bookCode,member-> listborrowed[0].borrow_date.day,member-> listborrowed[0].borrow_date.month,member-> listborrowed[0].borrow_date.year,member-> listborrowed[1].bookCode,member-> listborrowed[1].borrow_date.day,member-> listborrowed[1].borrow_date.month,member-> listborrowed[1].borrow_date.year,member-> listborrowed[2].bookCode,member-> listborrowed[2].borrow_date.day,member-> listborrowed[2].borrow_date.month,member-> listborrowed[2].borrow_date.year);
+  members=fopen("db-Member.txt","a");
+  fprintf(members,"%s/%s/%s/%s/%s/%s/%d/%d/%d/%s/%d/%d/%d/%s/%d/%d/%d/%d/%d\n",member->fName,member->lName,member->mAddress,member->eMail,member->function,member-> listborrowed[0].bookCode,member-> listborrowed[0].borrow_date.day,member-> listborrowed[0].borrow_date.month,member-> listborrowed[0].borrow_date.year,member-> listborrowed[1].bookCode,member-> listborrowed[1].borrow_date.day,member-> listborrowed[1].borrow_date.month,member-> listborrowed[1].borrow_date.year,member-> listborrowed[2].bookCode,member-> listborrowed[2].borrow_date.day,member-> listborrowed[2].borrow_date.month,member-> listborrowed[2].borrow_date.year,member -> loan,member->sanction);
   fclose(members);
 }
 
@@ -114,7 +126,7 @@ void saveMember(Member* member)
 void saveMembers(Community* community)
 {
   FILE *members;
-  members=fopen("members2.txt","w");
+  members=fopen("db-Member.txt","w");
   fprintf(members,"%d\n",(*community).nMembers);
   fclose(members);
   for(int i=0;i<(*community).nMembers;i++)
@@ -125,25 +137,27 @@ void saveMembers(Community* community)
 void readMember(Member* member,int index)
 {
   FILE *members;
-  char test[100];
-  members=fopen("members2.txt","r");
+  char test[1000];
+  members=fopen("db-Member.txt","r");
   for(int i=0;i<=index;i++)
-    fgets(test,100,members);
-  fscanf(members,"%[^/]/%[^/]/%[^/]/%[^/]/%[^/]/%[^/]/%d/%d/%d/%[^/]/%d/%d/%d/%[^/]/%d/%d/%d\n",&member->fName,&member->lName,&member->mAddress,&member->eMail,&member->function,&member-> listborrowed[0].bookCode,&member-> listborrowed[0].borrow_date.day,&member-> listborrowed[0].borrow_date.month,&member-> listborrowed[0].borrow_date.year,&member-> listborrowed[1].bookCode,&member-> listborrowed[1].borrow_date.day,&member-> listborrowed[1].borrow_date.month,&member-> listborrowed[1].borrow_date.year,&member-> listborrowed[2].bookCode,&member-> listborrowed[2].borrow_date.day,&member-> listborrowed[2].borrow_date.month,&member-> listborrowed[2].borrow_date.year);
+    fgets(test,1000,members);
+  fscanf(members,"%[^/]/%[^/]/%[^/]/%[^/]/%[^/]/%[^/]/%d/%d/%d/%[^/]/%d/%d/%d/%[^/]/%d/%d/%d/%d/%d\n",&member->fName,&member->lName,&member->mAddress,&member->eMail,&member->function,&member-> listborrowed[0].bookCode,&member-> listborrowed[0].borrow_date.day,&member-> listborrowed[0].borrow_date.month,&member-> listborrowed[0].borrow_date.year,&member-> listborrowed[1].bookCode,&member-> listborrowed[1].borrow_date.day,&member-> listborrowed[1].borrow_date.month,&member-> listborrowed[1].borrow_date.year,&member-> listborrowed[2].bookCode,&member-> listborrowed[2].borrow_date.day,&member-> listborrowed[2].borrow_date.month,&member-> listborrowed[2].borrow_date.year,&member->loan,&member->sanction);
   fclose(members);
 }
-
 
 void readMembers(Community* community)
 {
   FILE *members;
-  members=fopen("members2.txt","r");
+  int i=0;
+  printf("Loading Members...\n");
+  members=fopen("db-Member.txt","r");
   fscanf(members,"%d\n",&(*community).nMembers);
   fclose(members);
   (*community).list=(Member*)malloc((*community).nMembers*sizeof(Member));
-  for(int i=0;i<(*community).nMembers;i++){
+  for(i=0;i<(*community).nMembers;i++){
     readMember(&((*community).list[i]),i);
   }
+  printf("Finished loading Members %d loaded\n",i);
 }
 
 void sortListOfMembers(Community* community){
@@ -160,7 +174,7 @@ void sortListOfMembers(Community* community){
           (*community).list[j] = temp;
       }
       else
-        if ((*community).list[j].lName  == (*community).list[j+1].lName)
+        if (strcmp((*community).list[j].lName,(*community).list[j+1].lName)==0)
       {
         if ((*community).list[j].fName > (*community).list[j+1].fName)
         {
@@ -176,4 +190,39 @@ void sortListOfMembers(Community* community){
 void displayMembers(Community* community){
   for(int k=0;k<(*community).nMembers;k++)
     displayMember(&(*community).list[k]);
+}
+
+void deleteMember(Community* community){
+  char lName[100];
+  char fName[100];
+  int i;
+  int exist=0;
+  int try=0;
+  do{
+    printf("Please give the first name of the member that you want to delete : \n");
+    gets(fName);
+    printf("Please give the last name of the member : \n");
+    gets(lName);
+    i=-1;;
+    do{
+      i++;
+      if(strcmp((*community).list[i].fName,fName)==0 && strcmp((*community).list[i].lName,lName)==0) exist=1;
+    }while(i<(*community).nMembers-1 && exist==0);
+    if(exist==0){
+    printf("The given member doesn't exist, please try again\n");
+    try++;}
+    if(try==3){
+      printf("You did too many tries, your maybe stuck, you've been sent back in the menu\n");
+      return;
+    }
+  }while (exist==0);
+  if (i!=(*community).nMembers-1){
+    Member temp;
+    temp=(*community).list[i];
+    (*community).list[i]=(*community).list[(*community).nMembers-1];
+    (*community).list[(*community).nMembers-1]=temp;
+  }
+  (*community).nMembers--;
+  (*community).list=realloc((*community).list,(*community).nMembers*sizeof(Member));
+
 }

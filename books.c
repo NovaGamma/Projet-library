@@ -5,7 +5,7 @@
 
 void addBook(Library* library){//in order to add a book to the library, since we allocate dynamically the array, we need to allocate more space to it (the space for 1 book)
   (*library).nBooks++;
-  realloc((*library).list,(*library).nBooks*sizeof(Book));
+  (*library).list=realloc((*library).list,(*library).nBooks*sizeof(Book));
   getBook(library,&((*library).list[(*library).nBooks-1]));
 }
 
@@ -54,18 +54,21 @@ void displayBook(Book* book){
 void saveBook(Book* book){
   FILE *books;
   books=fopen("db-Book.txt","a");
-  fprintf(books,"%s/%s/%s/%s/%d/%d\n",book->title,book->author,book->code,book->nAvailableCopies,book->theme,book->nCopies);
+  fprintf(books,"%s/%s/%s/%d/%s/%d\n",book->title,book->author,book->code,book->nAvailableCopies,book->theme,book->nCopies);
   fclose(books);
 }
 
 void saveBooks(Library* library){
   FILE *books;
+  int i=0;
+  printf("Saving the Books...");
   books=fopen("db-Book.txt","w");
   fprintf(books,"%d\n",(*library).nBooks);
   fclose(books);
-  for(int i=0;i<(*library).nBooks;i++)
+  for(i=0;i<(*library).nBooks;i++){
+    printf("book number : %d\n",i);
     saveBook(&((*library).list[i]));
-
+  }
 }
 
 void readBook(Book* book,int index){
@@ -80,15 +83,16 @@ void readBook(Book* book,int index){
 
 void readBooks(Library* library){
   FILE *books;
-  char test[100];
+  int i=0;
   books=fopen("db-Book.txt","r");
   fscanf(books,"%d\n",&(*library).nBooks);
   fclose(books);
   (*library).list=(Book*)malloc((*library).nBooks*sizeof(Book));
-  for(int i=0;i<(*library).nBooks;i++){
-    printf("Book number : %d\n",i);
+  printf("Loading Books...\n");
+  for(i=0;i<(*library).nBooks;i++){
     readBook(&((*library).list[i]),i);
   }
+  printf("Finished loading Book %d loaded\n",i);
 }
 
 void displayBooks(Library* library){
@@ -97,16 +101,41 @@ void displayBooks(Library* library){
     displayBook(&((*library).list[i]));
 }
 
-void deleteBook(Library* library,int index){//here index is the index of the book that we want to delete
+void deleteBook(Library* library){//here index is the index of the book that we want to delete
 //first we need to exchange the last book with the one that we want to deleteBook
-if (index!=(*library).nBooks-1){
-  Book temp;
-  temp=(*library).list[index];
-  (*library).list[index]=(*library).list[(*library).nBooks-1];
-  (*library).list[(*library).nBooks-1]=temp;
+int index;
+//and we will ask for the book to check if it exist
+  int exist=0;
+  int try=0;
+  char code[7];
+  do{
+    printf("Please give the code of the book : \n");
+    gets(code);
+    index=-1;
+    do{
+      index++;
+      if(strcmp((*library).list[index].code,code)==0) exist=1;
+    }while(index<(*library).nBooks-1 && exist==0);
+    if(exist==0){
+    printf("The given code doesn't correspond to any book in the library, please try again\n");
+    try++;}
+    if(try==3){
+      printf("You did too many tries, your maybe stuck, you've been sent back in the menu\n");
+      return;
+    }
+  }while(exist==0);
+  if((*library).list[index].nAvailableCopies!=(*library).list[index].nCopies){
+    printf("The book doesn't have all it's copied returned, you can't delete it, you'll be sent back to the menu");
+    return;
+  }
+  if (index!=(*library).nBooks-1){
+    Book temp;
+    temp=(*library).list[index];
+    (*library).list[index]=(*library).list[(*library).nBooks-1];
+    (*library).list[(*library).nBooks-1]=temp;
   }
   (*library).nBooks--;
-  realloc((*library).list,(*library).nBooks*sizeof(Book));
+  (*library).list=realloc((*library).list,(*library).nBooks*sizeof(Book));
 }
 
 void bookSearch(Library* library,int type){
@@ -140,8 +169,6 @@ void bookSearch(Library* library,int type){
         char name[3];//3 characters because it's the limit defined in the Book struct
         printf("Please give the theme of the book (ex : SFX) : ");
         gets(name);
-        printf("%d\n",strlen(name));
-        printf("%s\n",name);
         search(library,&result,type,name);
       }
 
@@ -169,10 +196,10 @@ int testBook(Book* book,int type,char name[]){
 void search(Library* library,Library* result,int type, char name[]){
   printf("%d\n",strlen(name));
   for(int i=0;i<(*library).nBooks;i++){
-    if(strcmp((*library).list[i].theme,name)==0){//  testBook(&(*library).list[i],type,name)
+    if(testBook(&(*library).list[i],type,name)==0){//  testBook(&(*library).list[i],type,name)
       (*result).nBooks++;
       if((*result).nBooks>1){
-        realloc((*result).list,((*result).nBooks)*sizeof(Book));
+        (*result).list=realloc((*result).list,((*result).nBooks)*sizeof(Book));
       }
     (*result).list[(*result).nBooks-1]=(*library).list[i];
     }
@@ -181,13 +208,49 @@ void search(Library* library,Library* result,int type, char name[]){
 
 
 void sortTheme(Library* library){
-  return;
+  Book temp;
+  for(int i=0;i<(*library).nBooks;i++)
+  {
+    for(int j=0;j<(*library).nBooks;j++)
+    {
+      if ((*library).list[j].theme > (*library).list[j+1].theme)
+      {
+          temp = (*library).list[j+1];
+          (*library).list[j+1] = (*library).list[j];
+          (*library).list[j] = temp;
+      }
+    }
+  }
 }
 
-void sortAlpha(Library* library){
-  return;
+void sortCode(Library* library){
+  Book temp;
+  for(int i=0;i<(*library).nBooks;i++)
+  {
+    for(int j=0;j<(*library).nBooks;j++)
+    {
+      if ((*library).list[j].code > (*library).list[j+1].code)
+      {
+          temp = (*library).list[j+1];
+          (*library).list[j+1] = (*library).list[j];
+          (*library).list[j] = temp;
+      }
+    }
+  }
 }
 
 void sortAuthor(Library* library){
-  return;
+  Book temp;
+  for(int i=0;i<(*library).nBooks;i++)
+  {
+    for(int j=0;j<(*library).nBooks;j++)
+    {
+      if ((*library).list[j].author > (*library).list[j+1].author)
+      {
+          temp = (*library).list[j+1];
+          (*library).list[j+1] = (*library).list[j];
+          (*library).list[j] = temp;
+      }
+    }
+  }
 }

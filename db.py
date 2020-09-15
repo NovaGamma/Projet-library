@@ -29,4 +29,4 @@ with open("lives_generer.txt",'r') as File:
         nBooksAvailable=nBooks[1].rstrip('\n')
         book=Book(title,author,code,theme,nBooksAvailable,nBooksTotal)
         with open("db-Book.txt",'a') as FILE:
-            FILE.write(book.title+'/'+book.author+'/'+book.code+'/'+book.nBooksAvailable+'/'+book.theme+'/'+book.nBooksTotal+'\n')
+            FILE.write(book.title+'/'+book.author+'/'+book.code+'/'+book.nBooksTotal+'/'+book.theme+'/'+book.nBooksTotal+'\n')

@@ -26,14 +26,14 @@ void readBook(Book*,int);
 void displayBooks(Library*);
 void saveBook(Book*);
 void saveBooks(Library*);
-void deleteBook(Library*,int);
+void deleteBook(Library*);
 void searchBook(Library*);
 int getCode(Library*,char[]);
 void bookSearch(Library*,int);
 void search(Library*,Library*,int, char[]);
 int testBook(Book*,int,char[]);
 void sortTheme(Library*);
-void sortAlpha(Library*);
+void sortCode(Library*);
 void sortAuthor(Library*);
 
 #endif

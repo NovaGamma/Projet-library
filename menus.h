@@ -4,8 +4,8 @@
 #include "member.h"
 #include "book.h"
 
-void readOnlyAccessServiceMenu(Library*,Community*);
-void interfacesWithTheLibrarianMenu(Library*,Community*);
+int readOnlyAccessServiceMenu(Library*,Community*,ListOfLoans*,ListOfLoans*);
+int interfacesWithTheLibrarianMenu(Library*,Community*,ListOfLoans*,ListOfLoans*);
 void menuDisplayBooks(Library*);
 void getLetter(char *chr, char *message, int nbChoice);
 #endif

@@ -53,9 +53,11 @@ void saveMembers(Community*);
 void readMember(Member*,int);
 void readMembers(Community*);
 void displayMembers(Community*);
+void sortListOfMembers(Community*);
+void deleteMember(Community*);
 
 void addLoan(Library*,Community*, ListOfLoans*,ListOfLoans*);
-void addBorrow(ListOfLoans*,Date,Member*,Book*);
+void addBorrow(ListOfLoans*,Date*,Member*,Book*);
 void finishLoan(Library*,Community*, ListOfLoans*,ListOfLoans*);
 void saveLoans(ListOfLoans*,ListOfLoans*);
 void saveActiveLoan(Borrow*);
@@ -63,5 +65,6 @@ void saveTotalLoan(Borrow*);
 void readLoans(ListOfLoans*,ListOfLoans*);
 void readActiveLoan(Borrow*,int);
 void readTotalLoan(Borrow*,int);
+void displayLoans(ListOfLoans*);
 
 #endif
